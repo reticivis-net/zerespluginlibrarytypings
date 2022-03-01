@@ -4,8 +4,6 @@
 
 
 import {Component, ReactElement} from "react";
-import SettingPanel = SettingsModule.SettingPanel;
-import SettingField = SettingsModule.SettingField;
 
 
 /**
@@ -1226,7 +1224,7 @@ declare namespace PluginUpdaterModule {
 
     /**
      * <p>Creates the update button found in the plugins page of BetterDiscord
-     * settingsModule. Returned button will already have listeners to create the tooltipModule.</p>
+     * settings. Returned button will already have listeners to create the tooltipModule.</p>
      * @returns <p>check for update button</p>
      */
     function createUpdateButton(): HTMLElement;
@@ -1278,19 +1276,19 @@ declare namespace PluginUtilitiesModule {
     function saveData(name: string, key: string, data: any): void;
 
     /**
-     * <p>Loads settingsModule through BetterDiscord's API.</p>
+     * <p>Loads settings through BetterDiscord's API.</p>
      * @param name - <p>name for the file (usually plugin name)</p>
      * @param defaultData - <p>default data to populate the object with</p>
-     * @returns <p>the combined saved and default settingsModule</p>
+     * @returns <p>the combined saved and default settings</p>
      */
-    function loadSettingsModule(name: string, defaultData: any): any;
+    function loadsettings(name: string, defaultData: any): any;
 
     /**
-     * <p>Saves settingsModule through BetterDiscord's API.</p>
+     * <p>Saves settings through BetterDiscord's API.</p>
      * @param name - <p>name for the file (usually plugin name)</p>
-     * @param data - <p>settingsModule to save</p>
+     * @param data - <p>settings to save</p>
      */
-    function saveSettingsModule(name: string, data: any): void;
+    function savesettings(name: string, data: any): void;
 
     /**
      * <p>Get the full path to the BetterDiscord folder.</p>
@@ -1598,19 +1596,19 @@ declare namespace UtilitiesModule {
     function saveData(name: string, key: string, data: any): void;
 
     /**
-     * <p>Loads settingsModule through BetterDiscord's API.</p>
+     * <p>Loads settings through BetterDiscord's API.</p>
      * @param name - <p>name for the file (usually plugin name)</p>
      * @param defaultData - <p>default data to populate the object with</p>
-     * @returns <p>the combined saved and default settingsModule</p>
+     * @returns <p>the combined saved and default settings</p>
      */
-    function loadSettingsModule(name: string, defaultData: any): any;
+    function loadSettings(name: string, defaultData: any): any;
 
     /**
-     * <p>Saves settingsModule through BetterDiscord's API.</p>
+     * <p>Saves settings through BetterDiscord's API.</p>
      * @param name - <p>name for the file (usually plugin name)</p>
-     * @param data - <p>settingsModule to save</p>
+     * @param data - <p>settings to save</p>
      */
-    function saveSettingsModule(name: string, data: any): void;
+    function saveSettings(name: string, data: any): void;
 }
 
 /**
@@ -2148,12 +2146,12 @@ declare namespace PopoutsModule {
 }
 
 /**
- * <p>An object that makes generating settingsModule panel 10x easier.</p>
+ * <p>An object that makes generating settings panel 10x easier.</p>
  */
 declare namespace SettingsModule {
 
     /**
-     * <p>Setting field to extend to create new settingsModule</p>
+     * <p>Setting field to extend to create new settings</p>
      * @param name - <p>name label of the setting</p>
      * @param note - <p>help/note to show underneath or above the setting</p>
      * @param onChange - <p>callback to perform on setting change</p>
@@ -2190,10 +2188,10 @@ declare namespace SettingsModule {
     }
 
     /**
-     * <p>Grouping of controls for easier management in settingsModule panels.</p>
-     * @param groupName - <p>title for the group of settingsModule</p>
+     * <p>Grouping of controls for easier management in settings panels.</p>
+     * @param groupName - <p>title for the group of settings</p>
      * @param [options] - <p>additional options for the group</p>
-     * @param [options.callback] - <p>callback called on settingsModule changed</p>
+     * @param [options.callback] - <p>callback called on settings changed</p>
      * @param [options.collapsible = true] - <p>determines if the group should be collapsible</p>
      * @param [options.shown = false] - <p>determines if the group should be expanded by default</p>
      */
@@ -2236,16 +2234,16 @@ declare namespace SettingsModule {
     }
 
     /**
-     * <p>Creates a new settingsModule panel</p>
-     * @param onChange - <p>callback to fire when settingsModule change</p>
+     * <p>Creates a new settings panel</p>
+     * @param onChange - <p>callback to fire when settings change</p>
      * @param nodes - <p>list of nodes to add to the panel container</p>
      */
     class SettingPanel {
         constructor(onChange: Function, ...nodes: (HTMLElement | typeof jQuery | SettingField | SettingGroup)[]);
 
         /**
-         * <p>Creates a new settingsModule panel</p>
-         * @param onChange - <p>callback to fire when settingsModule change</p>
+         * <p>Creates a new settings panel</p>
+         * @param onChange - <p>callback to fire when settings change</p>
          * @param nodes - <p>list of nodes to add to the panel container</p>
          * @returns <ul>
          * <li>root node for the panel.</li>
@@ -2887,9 +2885,9 @@ export declare class BasePlugin {
 
     loadSettings(settings?: object): { [key: string]: any };
 
-    buildSetting(data: { name: string, note: string, type: string, value: object, onChange: Function, id? }): SettingField
+    buildSetting(data: { name: string, note: string, type: string, value: object, onChange: Function, id? }): SettingsModule.SettingField
 
-    buildSettingsPanel(): SettingPanel
+    buildSettingsPanel(): SettingsModule.SettingPanel
 
     defaultSettings: { [key: string]: any }
     settings: { [key: string]: any }
