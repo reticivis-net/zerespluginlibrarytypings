@@ -7,7 +7,7 @@ import {Component, ReactElement} from "react";
 
 
 /**
- * <p>Helpful utilitiesModule for dealing with colors.</p>
+ * <p>Helpful utilities for dealing with colors.</p>
  */
 declare namespace ColorConverterModule {
     /**
@@ -331,7 +331,7 @@ declare namespace DiscordSelectorsModule {
 }
 
 /**
- * <p>Helpful utilitiesModule for dealing with DOM operations.</p>
+ * <p>Helpful utilities for dealing with DOM operations.</p>
  * <p>This module also extends <code>HTMLElement</code> to add a set of utility functions,
  * the same as the ones available in the module itself, but with the <code>element</code>
  * parameter bound to <code>this</code>.</p>
@@ -1005,7 +1005,7 @@ declare namespace DOMToolsModule {
 }
 
 /**
- * <p>Simple loggerModule for the lib and plugins.</p>
+ * <p>Simple logger for the lib and plugins.</p>
  */
 declare namespace LoggerModule {
     /**
@@ -2040,7 +2040,7 @@ declare namespace ModalsModule {
     /**
      * <p>Sizes of modalsModule.</p>
      */
-    var ModalSModuleizes: any;
+    var ModalSizes: any;
 
     /**
      * <p>Shows the user profile modal for a given user.</p>

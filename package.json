@@ -9,9 +9,12 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "devDependencies": {
+  "dependencies": {
     "@types/jquery": "^3.5.14",
     "@types/node": "^17.0.21",
     "@types/react": "^17.0.39"
+  },
+  "devDependencies": {
+    "pluginlibrary": "github:rauenzi/BDPluginLibrary"
   }
 }
