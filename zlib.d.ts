@@ -1076,7 +1076,7 @@ declare namespace PatcherModule {
      * <p>Returns all the patches done by a specific caller</p>
      * @param name - <p>Name of the patch caller</p>
      */
-    function getPatchesByCaller(name: string): void;
+    function getPatchesByCaller(name: string): any[];
 
     /**
      * <p>Unpatches all patches passed, or when a string is passed unpatches all
@@ -2836,15 +2836,130 @@ declare namespace TooltipModule {
     function showRight(): void;
 }
 
-declare class ZLibraryClass {
+declare namespace BoundLogger {
+    /**
+     * <p>Logs an error using a collapsed error group with stacktrace.</p>
+     * @param message - <p>Message or error to have logged.</p>
+     * @param error - <p>Error object to log with the message.</p>
+     */
+    function stacktrace(message: string, error: Error): void;
+
+    /**
+     * <p>Logs using error formatting. For logging an actual error object consider {@link LoggerModule.stacktrace}</p>
+     * @param message - <p>Messages to have logged.</p>
+     */
+    function err(...message: string[]): void;
+
+    /**
+     * <p>Logs a warning message.</p>
+     * @param message - <p>Messages to have logged.</p>
+     */
+    function warn(...message: any[]): void;
+
+    /**
+     * <p>Logs an informational message.</p>
+     * @param message - <p>Messages to have logged.</p>
+     */
+    function info(...message: any[]): void;
+
+    /**
+     * <p>Logs used for debugging purposes.</p>
+     * @param message - <p>Messages to have logged.</p>
+     */
+    function debug(...message: any[]): void;
+
+    /**
+     * <p>Logs used for basic loggin.</p>
+     * @param message - <p>Messages to have logged.</p>
+     */
+    function log(...message: any[]): void;
+}
+declare namespace BoundPatcher {
+
+    import pushChildPatch = PatcherModule.pushChildPatch;
+
+    /**
+     * <p>Returns all the patches done by a specific caller</p>
+     * @param name - <p>Name of the patch caller</p>
+     */
+    function getPatchesByCaller(name: string): any[];
+
+    /**
+     * <p>Unpatches all patches passed, or when a string is passed unpatches all
+     * patches done by that specific caller.</p>
+     */
+    function unpatchAll(): void;
+
+    /**
+     * <p>Function with no arguments and no return value that may be called to revert changes made by {@link PatcherModule}, restoring (unpatching) original method.</p>
+     */
+    type unpatch = () => void;
+
+    /**
+     * <p>A callback that modifies method logic. This callback is called on each call of the original method and is provided all data about original call. Any of the data can be modified if necessary, but do so wisely.</p>
+     * <p>The third argument for the callback will be <code>undefined</code> for <code>before</code> patches. <code>originalFunction</code> for <code>instead</code> patches and <code>returnValue</code> for <code>after</code> patches.</p>
+     * @param thisObject - <p><code>this</code> in the context of the original function.</p>
+     * @param arguments - <p>The original arguments of the original function.</p>
+     * @param extraValue - <p>For <code>instead</code> patches, this is the original function from the module. For <code>after</code> patches, this is the return value of the function.</p>
+     */
+    type patchCallback = (thisObject: any, arguments: any[], extraValue: ((...params: any[]) => any) | any) => any;
+
+    /**
+     * <p>This method patches onto another function, allowing your code to run beforehand.
+     * Using this, you are also able to modify the incoming arguments before the original method is run.</p>
+     * @param moduleToPatch - <p>Object with the function to be patched. Can also patch an object's prototype.</p>
+     * @param functionName - <p>Name of the method to be patched</p>
+     * @param callback - <p>Function to run before the original method</p>
+     * @param options - <p>Object used to pass additional options.</p>
+     * @param [options.displayName] - <p>You can provide meaningful name for class/object provided in <code>what</code> param for logging purposes. By default, this function will try to determine name automatically.</p>
+     * @param [options.forcePatch = true] - <p>Set to <code>true</code> to patch even if the function doesnt exist. (Adds noop function in place).</p>
+     * @returns <p>Function with no arguments and no return value that should be called to cancel (unpatch) this patch. You should save and run it when your plugin is stopped.</p>
+     */
+    function before(moduleToPatch: any, functionName: string, callback: patchCallback, options?: {
+        displayName?: string;
+        forcePatch?: boolean;
+    }): unpatch;
+
+    /**
+     * <p>This method patches onto another function, allowing your code to run after.
+     * Using this, you are also able to modify the return value, using the return of your code instead.</p>
+     * @param moduleToPatch - <p>Object with the function to be patched. Can also patch an object's prototype.</p>
+     * @param functionName - <p>Name of the method to be patched</p>
+     * @param callback - <p>Function to run instead of the original method</p>
+     * @param options - <p>Object used to pass additional options.</p>
+     * @param [options.displayName] - <p>You can provide meaningful name for class/object provided in <code>what</code> param for logging purposes. By default, this function will try to determine name automatically.</p>
+     * @param [options.forcePatch = true] - <p>Set to <code>true</code> to patch even if the function doesnt exist. (Adds noop function in place).</p>
+     * @returns <p>Function with no arguments and no return value that should be called to cancel (unpatch) this patch. You should save and run it when your plugin is stopped.</p>
+     */
+    function after(moduleToPatch: any, functionName: string, callback: patchCallback, options?: {
+        displayName?: string;
+        forcePatch?: boolean;
+    }): unpatch;
+
+    /**
+     * <p>This method patches onto another function, allowing your code to run instead.
+     * Using this, you are also able to modify the return value, using the return of your code instead.</p>
+     * @param moduleToPatch - <p>Object with the function to be patched. Can also patch an object's prototype.</p>
+     * @param functionName - <p>Name of the method to be patched</p>
+     * @param callback - <p>Function to run after the original method</p>
+     * @param options - <p>Object used to pass additional options.</p>
+     * @param [options.displayName] - <p>You can provide meaningful name for class/object provided in <code>what</code> param for logging purposes. By default, this function will try to determine name automatically.</p>
+     * @param [options.forcePatch = true] - <p>Set to <code>true</code> to patch even if the function doesnt exist. (Adds noop function in place).</p>
+     * @returns <p>Function with no arguments and no return value that should be called to cancel (unpatch) this patch. You should save and run it when your plugin is stopped.</p>
+     */
+    function instead(moduleToPatch: any, functionName: string, callback: patchCallback, options?: {
+        displayName?: string;
+        forcePatch?: boolean;
+    }): unpatch;
+}
+
+declare class BaseZLibraryClass {
     ColorConverter: typeof ColorConverterModule
     DiscordClasses: typeof DiscordClassesModule
     DiscordClassModules: typeof DiscordClassModulesModule
     DiscordModules: typeof DiscordModulesModule
     DiscordSelectors: typeof DiscordSelectorsModule
     DOMTools: typeof DOMToolsModule
-    Logger: typeof LoggerModule
-    Patcher: typeof PatcherModule
     PluginUpdater: typeof PluginUpdaterModule
     PluginUtilities: typeof PluginUtilitiesModule
     ReactComponents: typeof ReactComponentsModule
@@ -2859,7 +2974,29 @@ declare class ZLibraryClass {
     Tooltip: typeof TooltipModule
 }
 
-export declare class BasePlugin {
+/**
+ * Type of the global ZeresPluginLibrary object
+ */
+export declare class ZLibraryClass extends BaseZLibraryClass {
+    Logger: typeof LoggerModule
+    Patcher: typeof PatcherModule
+}
+
+/**
+ * Modified ("bound") version of the library passed to plugins.
+ */
+export declare class PluginLibraryClass extends BaseZLibraryClass {
+    Logger: typeof BoundLogger
+    Patcher: typeof BoundPatcher
+}
+
+/**
+ * The base plugin class that ZLib plugins extend
+ */
+export declare interface BasePluginClass {
+    // have to define a constructor for TS to be fine with extending it
+    new(): BasePluginClass
+
     getName(): string;
 
     getDescription(): string;
@@ -2894,5 +3031,8 @@ export declare class BasePlugin {
 }
 
 declare global {
-    const ZLibrary: ZLibraryClass;
+    const ZeresPluginLibrary: ZLibraryClass;
+    // global vars that exist so types can be hinted without imports in typescript, may be removed
+    const PluginLibrary: PluginLibraryClass;
+    const BasePlugin: BasePluginClass;
 }
